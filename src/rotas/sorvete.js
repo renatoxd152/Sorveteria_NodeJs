@@ -1,9 +1,11 @@
 import express from 'express';
 import Sorvete from '../model/sorveteModel.js';
+import verifyToken from '../utils/jwt.js';
+
 const sorvete = express();
 sorvete.use(express.json());
 
-sorvete.get('/sorvetes', async (req, res) => {
+sorvete.get('/sorvetes',verifyToken, async (req, res) => {
   try {
     
     const sorvetesDoBanco = await Sorvete.findAll();
@@ -22,7 +24,7 @@ sorvete.get('/sorvetes', async (req, res) => {
 });
 
 
-sorvete.post('/sorvetes', async (req, res) => {
+sorvete.post('/sorvetes',verifyToken,async (req, res) => {
     try {
       const { nome, quantidade } = req.body;
   
@@ -40,7 +42,7 @@ sorvete.post('/sorvetes', async (req, res) => {
     }
   });
   
-  sorvete.delete('/sorvetes/:id', async (req, res) => {
+  sorvete.delete('/sorvetes/:id',verifyToken,async (req, res) => {
     try {
       const sorveteId = req.params.id;
   
@@ -60,7 +62,7 @@ sorvete.post('/sorvetes', async (req, res) => {
   });
   
 
-  sorvete.put('/sorvetes/:id', async (req, res) => {
+  sorvete.put('/sorvetes/:id',verifyToken,async (req, res) => {
     try {
       const sorveteId = req.params.id;
       const { nome, quantidade } = req.body;

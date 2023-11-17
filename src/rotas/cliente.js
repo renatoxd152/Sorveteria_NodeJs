@@ -1,10 +1,11 @@
 import express from 'express';
 import Cliente from '../model/clienteModel.js';
+import verifyToken from '../utils/jwt.js';
 const cliente = express();
 cliente.use(express.json());
 
 
-cliente.get('/cliente', async (req, res) => {
+cliente.get('/cliente', verifyToken, async (req, res) => {
     try {
       
       const clientesDoBanco = await Cliente.findAll();
@@ -24,7 +25,7 @@ cliente.get('/cliente', async (req, res) => {
     }
   });
 
-  cliente.post('/cliente', async (req, res) => {
+  cliente.post('/cliente',verifyToken, async (req, res) => {
     try {
       const { nome, cpf, email, telefone } = req.body;
 
@@ -48,7 +49,7 @@ cliente.get('/cliente', async (req, res) => {
     }
   });
   
-  cliente.put('/cliente/:id', async (req, res) => {
+  cliente.put('/cliente/:id', verifyToken,async (req, res) => {
     try {
       const clienteId = req.params.id;
       const { nome, email, telefone } = req.body;
@@ -77,7 +78,7 @@ cliente.get('/cliente', async (req, res) => {
     }
   });
   
-  cliente.delete('/cliente/:id', async (req, res) => {
+  cliente.delete('/cliente/:id', verifyToken,async (req, res) => {
     try {
       const clienteId = req.params.id;
   

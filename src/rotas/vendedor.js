@@ -1,10 +1,11 @@
 import express from 'express';
 import Vendedor from '../model/vendedorModel.js';
+import verifyToken from '../utils/jwt.js';
 const vendedor = express();
 vendedor.use(express.json());
 
 
-vendedor.get('/vendedor', async (req, res) => {
+vendedor.get('/vendedor', verifyToken,async (req, res) => {
     try {
       
       const vendedoresDoBanco = await Vendedor.findAll();
@@ -24,7 +25,7 @@ vendedor.get('/vendedor', async (req, res) => {
     }
   });
 
-  vendedor.post('/vendedor', async (req, res) => {
+  vendedor.post('/vendedor', verifyToken,async (req, res) => {
     try {
       const { nome, cpf, email, telefone } = req.body;
   
@@ -49,7 +50,7 @@ vendedor.get('/vendedor', async (req, res) => {
     }
   });
   
-  vendedor.put('/vendedor/:id', async (req, res) => {
+  vendedor.put('/vendedor/:id',verifyToken, async (req, res) => {
     try {
       const vendedorId = req.params.id;
       const { nome, email, telefone } = req.body;
@@ -78,7 +79,7 @@ vendedor.get('/vendedor', async (req, res) => {
     }
   });
   
-  vendedor.delete('/vendedor/:id', async (req, res) => {
+  vendedor.delete('/vendedor/:id',verifyToken ,async (req, res) => {
     try {
       const vendedorId = req.params.id;
   

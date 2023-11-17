@@ -4,11 +4,12 @@ import Vendedor from '../model/vendedorModel.js';
 import Cliente from '../model/clienteModel.js';
 import ItemCompra from '../model/itensCompraModel.js';
 import Sorvete from '../model/sorveteModel.js';
+import verifyToken from '../utils/jwt.js';
 import { format } from 'date-fns';
 const compra = express();
 compra.use(express.json());
 
-compra.get('/compras', async (req, res) => {
+compra.get('/compras',verifyToken, async (req, res) => {
     try {
       
       const comprasDoBanco = await Compra.findAll();
@@ -29,7 +30,7 @@ compra.get('/compras', async (req, res) => {
   });
 
 
-  compra.post('/compras', async (req, res) => {
+  compra.post('/compras',verifyToken, async (req, res) => {
     try {
       const { id_vendedor, id_cliente,valor_compra,sorvetes } = req.body;
       
@@ -85,7 +86,7 @@ compra.get('/compras', async (req, res) => {
   });
   
 
-  compra.put('/compras/:id', async (req, res) => {
+  compra.put('/compras/:id',verifyToken ,async (req, res) => {
     try {
       const { id } = req.params;
       const { id_vendedor, id_cliente,valor_compra} = req.body;
@@ -123,7 +124,7 @@ compra.get('/compras', async (req, res) => {
     }
   });
   
-  compra.delete('/compras/:id', async (req, res) => {
+  compra.delete('/compras/:id',verifyToken, async (req, res) => {
     try {
       const { id } = req.params;
   

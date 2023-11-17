@@ -1,11 +1,11 @@
 import express from 'express';
 import ItemCompra from '../model/itensCompraModel.js';
-
+import verifyToken from '../utils/jwt.js';
 const itens = express();
 itens.use(express.json());
 
 
-itens.get('/compra/:id',async(req,res)=>
+itens.get('/compra/:id',verifyToken,async(req,res)=>
 {
     try {
         const idCompra = req.params.id;
@@ -30,7 +30,7 @@ itens.get('/compra/:id',async(req,res)=>
 });
 
 
-itens.get('/compra', async (req, res) => {
+itens.get('/compra', verifyToken,async (req, res) => {
   try {
     
     const itensDoBanco = await ItemCompra.findAll();
@@ -49,7 +49,7 @@ itens.get('/compra', async (req, res) => {
   }
 });
 
-itens.put('/compra/:id', async (req, res) => {
+itens.put('/compra/:id',verifyToken ,async (req, res) => {
     try {
       const itemID = req.params.id;
       const {id_sorvete, quantidade } = req.body;
@@ -77,7 +77,7 @@ itens.put('/compra/:id', async (req, res) => {
 
 
 
-itens.delete('/compra/:id', async (req, res) => {
+itens.delete('/compra/:id',verifyToken, async (req, res) => {
     try {
       const itemId = req.params.id;
   

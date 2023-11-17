@@ -5,6 +5,7 @@ import cliente from './src/rotas/cliente.js';
 import vendedor from './src/rotas/vendedor.js';
 import compras from './src/rotas/compras.js';
 import itens from './src/rotas/itensCompras.js';
+import usuario from './src/rotas/usuario.js';
 const port = 3000;
 
 app.listen(port,()=>
@@ -17,6 +18,7 @@ app.use(cliente);
 app.use(vendedor);
 app.use(compras);
 app.use(itens);
+app.use(usuario);
 
 app.get('/',(req,res)=>
 {
