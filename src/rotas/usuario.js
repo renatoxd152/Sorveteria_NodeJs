@@ -1,7 +1,7 @@
-import express from 'express';
-import Usuario from '../model/usuarioModel.js';
 import bcrypt from 'bcrypt';
+import express from 'express';
 import jwt from 'jsonwebtoken';
+import Usuario from '../model/usuarioModel.js';
 import config from '../utils/config.js';
 const usuario = express();
 usuario.use(express.json());
@@ -10,9 +10,11 @@ usuario.post('/cadastrar', async (req, res) => {
     try {
       const { login, senha } = req.body;
   
-      const existingUser = await Usuario.findOne({ login });
+      const user = await Usuario.findOne({
+        where: { login: login},
+      });
   
-      if (existingUser) {
+      if (user) {
         return res.status(400).json({ message: 'Usuário já existe' });
       }
   
