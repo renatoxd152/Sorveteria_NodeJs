@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../utils/AuthContext';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mensagem, setMensagem] = useState('');
+  const { login } = useAuth();
   const navigate = useNavigate();
   
   const handleEmailChange = (e) => {
@@ -26,6 +28,7 @@ const Login = () => {
   
       const data = await response.json();
       if (data.token) {
+        login(data.token);
         navigate('/sorvetes');
         setEmail('');
         setPassword('');

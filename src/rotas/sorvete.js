@@ -14,6 +14,7 @@ sorvete.get('/sorvetes',verifyToken, async (req, res) => {
       id: sorvete.id,
       nome: sorvete.nome,
       quantidade: sorvete.quantidade,
+      preco:sorvete.preco
     }));
 
     res.status(200).json(mensagem);
@@ -26,14 +27,16 @@ sorvete.get('/sorvetes',verifyToken, async (req, res) => {
 
 sorvete.post('/sorvetes',verifyToken,async (req, res) => {
     try {
-      const { nome, quantidade } = req.body;
+      const { nome, quantidade,preco } = req.body;
   
-      const novoSorvete = await Sorvete.create({ nome, quantidade });
+      const novoSorvete = await Sorvete.create({ nome, quantidade,preco });
         
       res.status(201).json({
+        mensagem: 'Sorvete criado com sucesso!',
         id: novoSorvete.id,
         nome: novoSorvete.nome,
         quantidade: novoSorvete.quantidade,
+        preco:novoSorvete.preco
       });
 
     } catch (erro) {
@@ -65,7 +68,7 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
   sorvete.put('/sorvetes/:id',verifyToken,async (req, res) => {
     try {
       const sorveteId = req.params.id;
-      const { nome, quantidade } = req.body;
+      const { nome, quantidade,preco } = req.body;
   
       const sorveteToUpdate = await Sorvete.findByPk(sorveteId);
       if (!sorveteToUpdate) {
@@ -74,13 +77,15 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
   
       sorveteToUpdate.nome = nome;
       sorveteToUpdate.quantidade = quantidade;
-  
+      sorveteToUpdate.preco = preco;
+
       await sorveteToUpdate.save();
   
       res.status(200).json({
         id: sorveteToUpdate.id,
         nome: sorveteToUpdate.nome,
         quantidade: sorveteToUpdate.quantidade,
+        preco:sorveteToUpdate.preco
       });
     } catch (erro) {
       console.error(erro);

@@ -11,6 +11,11 @@ const Sorvete = sequelize.define('Sorvete', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  preco:{
+    type:DataTypes.FLOAT,
+    allowNull:false
+  }
+  ,
 }, {
   timestamps: false
 });

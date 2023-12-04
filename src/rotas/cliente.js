@@ -31,11 +31,12 @@ cliente.get('/cliente', verifyToken, async (req, res) => {
 
       const cpfExistente = await Cliente.findOne({ where: { cpf: cpf } });
       if (cpfExistente) {
-        return res.status(400).json({ erro: 'CPF já cadastrado' });
+        return res.status(400).json({ mensagem: 'CPF já cadastrado' });
       }
       const novoCliente = await Cliente.create({ nome, cpf, email, telefone });
   
       res.status(201).json({
+        mensagem: 'Cliente cadastrado com sucesso!',
         id: novoCliente.id,
         nome: novoCliente.nome,
         cpf: novoCliente.cpf,

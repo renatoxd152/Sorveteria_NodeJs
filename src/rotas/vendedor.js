@@ -31,12 +31,13 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
   
       const cpfExistente = await Vendedor.findOne({ where: { cpf: cpf } });
       if (cpfExistente) {
-        return res.status(400).json({ erro: 'CPF já cadastrado' });
+        return res.status(400).json({ mensagem: 'CPF já cadastrado!' });
       }
 
       const novoVendedor = await Vendedor.create({ nome, cpf, email, telefone });
   
       res.status(201).json({
+        mensagem:"O vendedor foi cadastrado com sucesso!",
         id: novoVendedor.id,
         nome: novoVendedor.nome,
         cpf: novoVendedor.cpf,
@@ -46,7 +47,7 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
   
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ erro: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
   });
   
