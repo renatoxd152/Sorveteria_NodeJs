@@ -10,6 +10,9 @@ import Clientes from './componentes/Clientes/clientes';
 import Compras from './componentes/Compras/compras';
 import ListarCompras from './componentes/Compras/listar_compras';
 import ListarClientes from './componentes/Clientes/listar';
+import EditarSorvete from './componentes/Sorvete/editar_sorvete';
+import EditarCliente from './componentes/Clientes/editar_cliente';
+import EditarVendedor from './componentes/Vendedores/editar_vendedor';
 function App() {
   return (
     <AuthProvider>
@@ -25,6 +28,9 @@ function App() {
         <Route path="/clientes/listarClientes" element={<ListarClientes/>} />
         <Route path="/compras/cadastrar" element={<Compras/>} />
         <Route path="/compras/listarCompras" element={<ListarCompras/>} />
+        <Route path="/editarSorvete/:id" element={<EditarSorvete/>} />
+        <Route path="/editarCliente/:id" element={<EditarCliente/>} />
+        <Route path="/editarVendedor/:id" element={<EditarVendedor/>} />
       </Routes>
     </AuthProvider>
   );

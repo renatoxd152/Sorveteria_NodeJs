@@ -24,6 +24,28 @@ sorvete.get('/sorvetes',verifyToken, async (req, res) => {
   }
 });
 
+sorvete.get('/sorvete/nome/:id', verifyToken, async (req, res) => {
+  try {
+    const sorveteId = req.params.id;
+
+    const sorveteEncontrado = await Sorvete.findByPk(sorveteId, {
+      attributes: ['nome']
+    });
+
+    if (!sorveteEncontrado) {
+      return res.status(404).json({ erro: 'Sorvete não encontrado' });
+    }
+
+    res.status(200).json({ nome: sorveteEncontrado.nome });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ erro: 'Erro interno do servidor' });
+  }
+});
+
+
+
+
 
 sorvete.post('/sorvetes',verifyToken,async (req, res) => {
     try {
@@ -72,7 +94,7 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
   
       const sorveteToUpdate = await Sorvete.findByPk(sorveteId);
       if (!sorveteToUpdate) {
-        return res.status(404).json({ erro: 'Sorvete não encontrado' });
+        return res.status(404).json({ mensagem: 'Sorvete não encontrado' });
       }
   
       sorveteToUpdate.nome = nome;
@@ -82,6 +104,7 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
       await sorveteToUpdate.save();
   
       res.status(200).json({
+        mensagem:"Sorvete atualizado com sucesso!",
         id: sorveteToUpdate.id,
         nome: sorveteToUpdate.nome,
         quantidade: sorveteToUpdate.quantidade,
@@ -89,7 +112,7 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
       });
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ erro: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
   });
 

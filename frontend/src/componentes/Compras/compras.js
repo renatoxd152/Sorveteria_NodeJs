@@ -1,16 +1,67 @@
 import React, { useState,useEffect } from "react";
 import Barra from "../../utils/Sorvete/barra_navegacao";
-import SelectVendedores from "../Vendedores/select_vendedores";
-import SelectClientes from "../Clientes/select_clientes";
 import { useAuth } from "../../utils/AuthContext";
 
 
-const SelectSorvetes = () => {
-  // Suponhamos que você tenha uma lista de sorvetes
+const Compras = () => {
+  
   const [sorvetes, setSorvetes] = useState([]);
   const [sorveteSelecionado, setSorveteSelecionado] = useState([]);
-  const [quantidades, setQuantidades] = useState({});
   const {token} = useAuth();
+  const[vendedores,setVendedores] = useState([]);
+  const[vendedor,setVendedor]= useState("");
+  const [clientes, setClientes] = useState([]);
+  const [cliente, setCliente] = useState("");
+  const [quantidades, setQuantidades] = useState({});
+  const[mensagem,setMensagem] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/cliente", {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        setClientes(data);
+      } catch (error) {
+        setMensagem("Erro ao buscar os clientes:", error);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/vendedor", {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `${token}`,
+          },
+        });
+
+        const data = await response.json();
+       
+        setVendedores(data);
+      } catch (error) {
+        setMensagem("Erro ao buscar os vendedores:", error)
+        
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +76,8 @@ const SelectSorvetes = () => {
         const data = await response.json();
         setSorvetes(data);
       } catch (error) {
-        console.error("Erro ao buscar sorvetes:", error);
+        setMensagem("Erro ao buscar sorvetes:", error)
+      
       }
     };
 
@@ -35,67 +87,183 @@ const SelectSorvetes = () => {
 
 
 
+
+
+  const handleSelectClienteChange = (event) => {
+    const selectedCliente = event.target.value;
+    setCliente(selectedCliente);
+  };
+
+  const handleSelectVendedorChange = (event) => {
+    const selectedVendedor = event.target.value;
+    setVendedor(selectedVendedor);
+  };
+   
   const handleSorveteChange = (sorvete) => {
-    // Adiciona ou remove o sorvete da lista de selecionados
+    
     const updatedSorvetes = sorveteSelecionado.includes(sorvete)
       ? sorveteSelecionado.filter((s) => s !== sorvete)
       : [...sorveteSelecionado, sorvete];
 
+
+
+    const updatedQuantidades = { ...quantidades };
+    if (!updatedSorvetes.includes(sorvete)) {
+      updatedQuantidades[sorvete] = 0;
+    }
+
+
     setSorveteSelecionado(updatedSorvetes);
+    setQuantidades(updatedQuantidades);
   };
 
-  const handleQuantidadeChange = (sorvete, quantidade) => {
-    // Atualiza a quantidade para o sorvete selecionado
-    setQuantidades({ ...quantidades, [sorvete]: quantidade });
+  const cadastraCompra = async () => {
+    try {
+      
+      const requestBody = {
+        id_vendedor: vendedor,
+        id_cliente: cliente,
+        valor_compra: calcularValorTotalSelecionados(),
+        sorvetes: sorveteSelecionado.map((id_sorvete) => ({
+          id_sorvete,
+          quantidade: quantidades[id_sorvete],
+        })),
+      };
+  
+      
+      const response = await fetch("http://localhost:3000/compras", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+        const data = await response.json();
+        console.log(data.mensagem);
+        setMensagem(data.mensagem);
+      
+  
+    } catch (error) {
+      setMensagem("Erro ao cadastrar compra:", error);
+    }
   };
   
- 
 
+  const handleQuantidadeChange = (sorveteId, quantidade) => {
+    setQuantidades((prevQuantidades) => ({
+      ...prevQuantidades,
+      [sorveteId]: quantidade,
+    }));
+  };
 
-  return (
-    <div>
-      <h3>Selecione os Sorvetes:</h3>
-      {sorvetes.map((sorvete) => (
-        <div key={sorvete.id}>
-          <label>
-            <input
-              type="checkbox"
-              value={sorvete.id}
-              checked={sorveteSelecionado.includes(sorvete.id)}
-              onChange={() => handleSorveteChange(sorvete.id)}
-            />
-            {sorvete}
-          </label>
-          {sorveteSelecionado.includes(sorvete) && (
-            <input
-              type="number"
-              min="0"
-              value={quantidades[sorvete] || 0}
-              onChange={(e) =>
-                handleQuantidadeChange(sorvete.id, parseInt(e.target.value, 10))
-              }
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
+  const calcularValorTotal = (sorveteId) => {
+    const sorvete = sorvetes.find((s) => s.id === sorveteId);
+    const quantidade = quantidades[sorveteId];
+  
+   
+    if (quantidade == null || isNaN(quantidade)) {
+      return 0;
+    }
+  
+    return sorvete ? sorvete.preco * quantidade : 0;
+  };
+
+const calcularValorTotalSelecionados = () => {
+  let totalSelecionados = 0;
+
+  for (const sorveteId of sorveteSelecionado) {
+    totalSelecionados += calcularValorTotal(sorveteId);
+  }
+
+  return totalSelecionados;
 };
-
-const Compras = () => {
   return (
-    <>
+    
+    <div>
       <Barra />
-      <div>
-        <form>
-          <SelectVendedores />
+      
+      
+      <form>
+      
+          <select value={vendedor} onChange={handleSelectVendedorChange}>
+        <option value="">Selecione um vendedor</option>
+        {vendedores.map((vendedor) => (
+          <option key={vendedor.id} value={vendedor.id}>
+            {vendedor.nome}
+          </option>
+        ))}
+      </select>
+
+
           <br />
-          <SelectClientes />
-          <br />
-          <SelectSorvetes />
-        </form>
-      </div>
-    </>
+
+          <select value={cliente} onChange={handleSelectClienteChange}>
+      <option value="">Selecione um cliente</option>
+      {clientes.map((cliente) => (
+        <option key={cliente.id} value={cliente.id}>
+          {cliente.nome}
+        </option>
+      ))}
+    </select>
+        
+    <h3>Selecione os Sorvetes:</h3>
+    
+      <table>
+        <thead>
+          <tr>
+            <th>Selecionar</th>
+            <th>Nome do Sorvete</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorvetes.map((sorvete) => (
+            <tr key={sorvete.id}>
+              <td>
+                <label>
+                  <input
+                    type="checkbox"
+                    value={sorvete.id}
+                    checked={sorveteSelecionado.includes(sorvete.id)}
+                    onChange={() => handleSorveteChange(sorvete.id)}
+                  />
+                </label>
+              </td>
+              <td>{sorvete.nome}</td>
+              <td>{sorvete.preco}</td>
+              <td>
+                {sorveteSelecionado.includes(sorvete.id) && (
+                  <input
+                    type="number"
+                    min="1"
+                    onChange={(e) =>
+                      handleQuantidadeChange(sorvete.id, parseInt(e.target.value, 10))
+                    }
+                    
+                  />
+                )}
+              </td>
+              <td>{calcularValorTotal(sorvete.id)}</td>
+              
+            </tr>
+
+            
+  
+          ))}
+          <tr>
+            <td colSpan="3"></td>
+            <td>Total</td>
+            <td>{calcularValorTotalSelecionados()}</td>
+        </tr>
+        </tbody>
+      </table>
+      <button onClick={cadastraCompra}>Cadastrar Compra</button>
+      </form>
+    </div>
   );
 };
 

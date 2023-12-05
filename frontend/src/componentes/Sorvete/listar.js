@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-
+import { Link } from 'react-router-dom';
 const Listar = () => {
   const [sorvetes, setSorvetes] = useState([]);
   const [mensagem, setMensagem] = useState('');
@@ -32,30 +32,7 @@ const Listar = () => {
     }
   };
 
-  const handleAtualizarSorvete = async (sorveteId) => {
-    try {
-      const response = await fetch(`http://localhost:3000/sorvetes/${sorveteId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${token}`,
-        },
-      });
-
-      if (response.ok) {
-        
-        const updatedSorvetes = sorvetes.filter((sorvete) => sorvete.id !== sorveteId);
-        setSorvetes(updatedSorvetes);
-        setMensagem('Sorvete atualizado com sucesso!');
-      } else {
-        console.error('Erro ao atualizar o sorvete');
-        setMensagem('Erro ao atualizar o sorvete');
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar o sorvete:', error);
-      setMensagem('Erro ao atualizar o sorvete');
-    }
-  };
+ 
   
   useEffect(() => {
     const fetchData = async () => {
@@ -107,9 +84,7 @@ const Listar = () => {
             </td>
 
             <td>
-              <button onClick={() => handleAtualizarSorvete(sorvete.id)}>
-                Atualizar
-              </button>
+            <Link to={`/editarSorvete/${sorvete.id}`}>Atualizar</Link>
             </td>
             </tr>
           ))}

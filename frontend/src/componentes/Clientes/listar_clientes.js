@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-
+import { Link } from "react-router-dom";
 const Listar = () => {
   const [clientes, setClientes] = useState([]);
   const [mensagem, setMensagem] = useState("");
@@ -30,30 +30,7 @@ const Listar = () => {
     }
   };
 
-  const handleAtualizarCliente = async (clienteId) => {
-    try {
-      // Substitua 'POST' pelo método HTTP correto para atualizar um cliente
-      const response = await fetch(`http://localhost:3000/cliente/${clienteId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      });
 
-      if (response.ok) {
-        const updatedClientes = clientes.filter((cliente) => cliente.id !== clienteId);
-        setClientes(updatedClientes);
-        setMensagem("Cliente atualizado com sucesso!");
-      } else {
-        console.error("Erro ao atualizar o cliente");
-        setMensagem("Erro ao atualizar o cliente");
-      }
-    } catch (error) {
-      console.error("Erro ao atualizar o cliente:", error);
-      setMensagem("Erro ao atualizar o cliente");
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,9 +81,7 @@ const Listar = () => {
                 </button>
               </td>
               <td>
-                <button onClick={() => handleAtualizarCliente(cliente.id)}>
-                  Atualizar
-                </button>
+              <Link to={`/editarCliente/${cliente.id}`}>Atualizar</Link>
               </td>
             </tr>
           ))}

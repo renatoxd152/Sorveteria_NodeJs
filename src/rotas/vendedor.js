@@ -25,6 +25,25 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
     }
   });
 
+  vendedor.get('/vendedor/nome/:id', verifyToken, async (req, res) => {
+    try {
+      const vendedorId = req.params.id;
+  
+      const vendedorEncontrado = await Vendedor.findByPk(vendedorId, {
+        attributes: ['nome']
+      });
+  
+      if (!vendedorEncontrado) {
+        return res.status(404).json({ erro: 'Vendedor não encontrado' });
+      }
+  
+      res.status(200).json({ nome: vendedorEncontrado.nome });
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+  });
+
   vendedor.post('/vendedor', verifyToken,async (req, res) => {
     try {
       const { nome, cpf, email, telefone } = req.body;

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
+import { useParams, useNavigate } from 'react-router-dom';
 import Barra from "../../utils/Sorvete/barra_navegacao";
 
-const Clientes = () => {
+const EditarVendedor = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [nome, setNome] = useState("");
   const [cpf, setCPF] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-
   const { token } = useAuth();
   const [mensagem, setMensagem] = useState("");
 
@@ -27,33 +29,37 @@ const Clientes = () => {
     setTelefone(e.target.value);
   };
 
-  const handleCadastrarCliente = async () => {
+  const handleEditarVendedor = async () => {
     try {
-      const response = await fetch("http://localhost:3000/cliente", {
-        method: "POST",
+      const response = await fetch(`http://localhost:3000/vendedor/${id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,
         },
-        body: JSON.stringify({ nome: nome, cpf: cpf, email: email, telefone: telefone }),
+        body: JSON.stringify({ nome: nome, cpf: cpf, email: email, telefone: telefone  }),
       });
 
       const data = await response.json();
-
+      voltar();
       setMensagem(data.mensagem);
     } catch (error) {
-      console.error("Erro ao cadastrar o Cliente!");
+      console.error("Erro ao editar o Vendedor!");
     }
+  };
+
+  const voltar = () => {
+    navigate("/vendedores/listarVendedores");
   };
 
   return (
     <div>
       <Barra />
-
+      <h1>Editar Vendedor</h1>
       <form>
         <span>{mensagem}</span>
         <br />
-        <label>Nome do cliente</label>
+        <label>Nome do vendedor</label>
         <input type="text" value={nome} onChange={handleNome} />
         <br />
         <label>CPF</label>
@@ -65,13 +71,15 @@ const Clientes = () => {
         <label>Telefone</label>
         <input type="number" value={telefone} onChange={handleTelefone} />
         <br />
-        
-        <button type="button" onClick={handleCadastrarCliente}>
-          Cadastrar Cliente
+        <button type="button" onClick={voltar}>
+          Voltar
+        </button>
+        <button type="button" onClick={handleEditarVendedor}>
+          Editar Vendedor
         </button>
       </form>
     </div>
   );
-};
+}
 
-export default Clientes;
+export default EditarVendedor;

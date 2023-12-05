@@ -25,6 +25,36 @@ cliente.get('/cliente', verifyToken, async (req, res) => {
     }
   });
 
+
+
+  cliente.get('/cliente/nome/:id', verifyToken, async (req, res) => {
+    try {
+      const clienteId = req.params.id;
+  
+      const clienteEncontrado = await Cliente.findByPk(clienteId, {
+        attributes: ['nome']
+      });
+  
+      if (!clienteEncontrado) {
+        return res.status(404).json({ erro: 'Cliente não encontrado' });
+      }
+  
+      res.status(200).json({ nome: clienteEncontrado.nome });
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ erro: 'Erro interno do servidor' });
+    }
+  });
+
+
+
+
+
+
+
+
+
+
   cliente.post('/cliente',verifyToken, async (req, res) => {
     try {
       const { nome, cpf, email, telefone } = req.body;

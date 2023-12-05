@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-
+import { Link } from 'react-router-dom';
 const Listar = () => {
   const [vendedores, setVendedores] = useState([]);
   const [mensagem, setMensagem] = useState('');
@@ -30,30 +30,7 @@ const Listar = () => {
     }
   };
 
-  const handleAtualizarVendedor = async (vendedorId) => {
-    try {
-      // Replace 'POST' with the correct HTTP method for updating a vendedor
-      const response = await fetch(`http://localhost:3000/vendedor/${vendedorId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${token}`,
-        },
-      });
 
-      if (response.ok) {
-        const updatedVendedores = vendedores.filter((vendedor) => vendedor.id !== vendedorId);
-        setVendedores(updatedVendedores);
-        setMensagem('Vendedor atualizado com sucesso!');
-      } else {
-        console.error('Erro ao atualizar o vendedor');
-        setMensagem('Erro ao atualizar o vendedor');
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar o vendedor:', error);
-      setMensagem('Erro ao atualizar o vendedor');
-    }
-  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -104,9 +81,7 @@ const Listar = () => {
                 </button>
               </td>
               <td>
-                <button onClick={() => handleAtualizarVendedor(vendedor.id)}>
-                  Atualizar
-                </button>
+              <Link to={`/editarVendedor/${vendedor.id}`}>Atualizar</Link>
               </td>
             </tr>
           ))}
