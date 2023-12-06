@@ -6,7 +6,7 @@ const Listar = () => {
     const [compras, setCompras] = useState([]);
     const [detalhesCompra, setDetalhesCompra] = useState(null);
     const[itens,setItens] = useState([]);
-
+    const[mensagem,setMensagem] = useState("");
 
     async function fetchDetalhesCompra(idCompra) {
         try {
@@ -139,9 +139,46 @@ const Listar = () => {
   
       fetchData();
     }, [token]);
+
+
+    const excluirCompra = async(id) =>
+    {
+      try {
+        const response = await fetch(`http://localhost:3000/compras/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+          },
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          const updatedCompras = compras.filter((compra) => compra.id !== id);
+          setCompras(updatedCompras);
+          setMensagem(data.mensagem);
+        } else {
+          setMensagem(data.mensagem);
+        }
+      } catch (error) {
+        console.error("Erro ao excluir a compra:", error);
+        setMensagem("Erro ao excluir a compra");
+      }
+    }
+
+
+
+
+
+
+
+
+
+
   
     return (
         <div>
+          <p>{mensagem}</p>
       <table>
         <thead>
           <tr>
@@ -158,6 +195,7 @@ const Listar = () => {
               <td>{compra.nome_cliente}</td>
               <td>{compra.valor_compra}</td>
               <td>{compra.data_compra}</td>
+              <td><button type="button" onClick={()=>excluirCompra(compra.id)}>Excluir</button></td>
             </tr>
           ))}
         </tbody>

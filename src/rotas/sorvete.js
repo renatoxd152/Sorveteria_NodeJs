@@ -125,5 +125,40 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
     }
   });
 
+
+
+  sorvete.patch('/sorvetes/atualizarQuantidade/:id', verifyToken, async (req, res) => {
+    try {
+      const sorveteId = req.params.id;
+      const { quantidade } = req.body;
+  
+      // Verificar se a quantidadeSubtrair é um número positivo
+      if (!Number.isInteger(quantidade) || quantidade <= 0) {
+        return res.status(400).json({ mensagem: 'A quantidade a subtrair deve ser um número inteiro positivo' });
+      }
+  
+      const sorveteToUpdate = await Sorvete.findByPk(sorveteId);
+      if (!sorveteToUpdate) {
+        return res.status(404).json({ mensagem: 'Sorvete não encontrado' });
+      }
+
+      if (sorveteToUpdate.quantidade < quantidade) {
+        return res.status(400).json({ mensagem: 'Quantidade insuficiente de sorvete para subtrair'});
+      }
+  
+      // Subtrair a quantidade
+      sorveteToUpdate.quantidade -= quantidade;
+      await sorveteToUpdate.save();
+  
+      res.status(200).json({
+        mensagem: `Quantidade de sorvete ${sorveteToUpdate.nome} subtraída com sucesso`,
+      });
+    } catch (erro) {
+      console.error(erro);
+      res.status(500).json({ mensagem: 'Erro interno do servidor' });
+    }
+  });
+  
+
   
 export default sorvete;

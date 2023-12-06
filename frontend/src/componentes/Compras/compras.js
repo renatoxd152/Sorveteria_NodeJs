@@ -14,6 +14,7 @@ const Compras = () => {
   const [cliente, setCliente] = useState("");
   const [quantidades, setQuantidades] = useState({});
   const[mensagem,setMensagem] = useState("");
+  const[sorveteAtualizado,setSorveteAtualizado] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,7 +120,21 @@ const Compras = () => {
 
   const cadastraCompra = async () => {
     try {
+
+      for (const sorveteId of sorveteSelecionado) {
+        const sorvete = sorvetes.find((s) => s.id === sorveteId);
+        const quantidadeSelecionada = quantidades[sorveteId];
       
+        if(quantidadeSelecionada <= 0)
+        {
+          setMensagem("Selecione uma quantidade maior que 0");
+          return;
+        }
+        if (sorvete && quantidadeSelecionada > sorvete.quantidade) {
+          setMensagem(`Quantidade insuficiente de ${sorvete.nome} no estoque`);
+          return;
+        }
+      }
       const requestBody = {
         id_vendedor: vendedor,
         id_cliente: cliente,
@@ -130,6 +145,11 @@ const Compras = () => {
         })),
       };
   
+
+      for (const sorveteId of sorveteSelecionado) {
+        await deletarQuantidades_Sorvetes(sorveteId,quantidades[sorveteId]);
+      }
+      
       
       const response = await fetch("http://localhost:3000/compras", {
         method: 'POST',
@@ -179,6 +199,33 @@ const calcularValorTotalSelecionados = () => {
 
   return totalSelecionados;
 };
+
+
+
+
+
+
+
+const deletarQuantidades_Sorvetes = async (id,quantidade) =>
+{
+  try {
+    const response = await fetch(`http://localhost:3000/sorvetes/atualizarQuantidade/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ quantidade:quantidade}),
+    });
+
+    const data = await response.json();
+    setSorveteAtualizado(data.mensagem);
+  } catch (error) {
+    console.error("Erro ao atualizar o sorvete:", error);
+    setMensagem("Erro ao atualizar o sorvete!");
+  }
+
+}
   return (
     
     <div>
@@ -210,6 +257,7 @@ const calcularValorTotalSelecionados = () => {
         
     <h3>Selecione os Sorvetes:</h3>
     <p>{mensagem}</p>
+    <p>{sorveteAtualizado}</p>
       <table>
         <thead>
           <tr>

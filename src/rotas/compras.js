@@ -130,9 +130,19 @@ compra.get('/compras',verifyToken, async (req, res) => {
   
       const compraExistente = await Compra.findByPk(id);
       if (!compraExistente) {
-        return res.status(404).json({ erro: 'Compra não encontrada' });
+        return res.status(404).json({ mensagem: 'Compra não encontrada' });
       }
+
+      await ItemCompra.destroy({
+        where: {
+          id_compra: compraExistente.id,
+        },
+      });
+
+
       await compraExistente.destroy();
+
+
   
       return res.status(200).json({ mensagem: 'Compra excluída com sucesso' });
     } catch (erro) {
