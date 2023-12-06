@@ -43,6 +43,8 @@ compra.get('/compras',verifyToken, async (req, res) => {
       if (!clienteExistente) {
         return res.status(404).json({ mensagem: 'Cliente não encontrado' });
       }
+
+      
   
   
       const data_compra = new Date();

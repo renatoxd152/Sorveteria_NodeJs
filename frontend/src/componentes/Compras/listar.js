@@ -167,6 +167,9 @@ const Listar = () => {
           const updatedCompras = compras.filter((compra) => compra.id !== id);
           setCompras(updatedCompras);
           setMensagem(data.mensagem);
+
+
+         
         } else {
           setMensagem(data.mensagem);
         }
@@ -188,7 +191,9 @@ const Listar = () => {
   
     return (
       <div>
-        <p>{mensagem}</p>
+         <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
         <table className="table">
           <thead className="thead-dark">
             <tr>
@@ -201,11 +206,11 @@ const Listar = () => {
           </thead>
           <tbody>
             {compras.map((compra) => (
-              <tr key={compra.id} onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>
-                <td>{compra.nome_vendedor}</td>
-                <td>{compra.nome_cliente}</td>
-                <td>{compra.valor_compra}</td>
-                <td>{compra.data_compra}</td>
+              <tr key={compra.id}>
+                <td onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>{compra.nome_vendedor}</td>
+                <td onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>{compra.nome_cliente}</td>
+                <td onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>{compra.valor_compra}</td>
+                <td onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>{compra.data_compra}</td>
                 <td>
                   <button
                     type="button"

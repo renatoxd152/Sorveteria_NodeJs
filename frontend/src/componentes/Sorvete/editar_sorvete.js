@@ -59,20 +59,20 @@ const EditarSorvete = () =>
         <div>
             <Barra/>
             <h1>Editar Sorvete</h1>
-            <form>
+            <form className="container mt-4">
                 <span>{mensagem}</span>
                 <br/>
                 <label>Nome do sorvete do sorvete</label>
-                <input type="text" value={nome} onChange={handleNome}/>
+                <input type="text" className="form-control" value={nome} onChange={handleNome}/>
                 <br/>
                 <label>Quantidade</label>
-                <input type="number" value={quantidade} onChange={handleQuantidade}/>
+                <input type="number" className="form-control" value={quantidade} onChange={handleQuantidade}/>
                 <br/>
                 <label>Preço</label>
-                <input type="number" value={preco} onChange={handlePreco}/>
+                <input type="number" className="form-control" value={preco} onChange={handlePreco}/>
                 <br/>
-                <button type="button" onClick={voltar}>Voltar</button>
-                <button type="button" onClick={handleEditarSorvete}>Editar Sorvete</button>
+                <button type="button" className="btn btn-secondary me-2" onClick={voltar}>Voltar</button>
+                <button type="button" className="btn btn-primary" onClick={handleEditarSorvete}>Editar Sorvete</button>
             </form>
         </div>
     )

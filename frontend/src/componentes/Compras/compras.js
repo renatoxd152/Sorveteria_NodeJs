@@ -14,7 +14,7 @@ const Compras = () => {
   const [cliente, setCliente] = useState("");
   const [quantidades, setQuantidades] = useState({});
   const[mensagem,setMensagem] = useState("");
-  const[sorveteAtualizado,setSorveteAtualizado] = useState("");
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,7 +118,41 @@ const Compras = () => {
     setQuantidades(updatedQuantidades);
   };
 
+
+
+  const deletarQuantidades_Sorvetes = async (id,quantidade) =>
+  {
+    try {
+      const response = await fetch(`http://localhost:3000/sorvetes/atualizarQuantidade/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({ quantidade:quantidade}),
+      });
+  
+      const data = await response.json();
+      
+    } catch (error) {
+      console.error("Erro ao atualizar o sorvete:", error);
+      setMensagem("Erro ao atualizar o sorvete!");
+    }
+  
+  }
+
+
+
+
+
+
+
+
+
+
+
   const cadastraCompra = async () => {
+    console.log(sorveteSelecionado);
     try {
 
       for (const sorveteId of sorveteSelecionado) {
@@ -201,113 +235,88 @@ const calcularValorTotalSelecionados = () => {
 };
 
 
+   return (
+    <div>
+      <Barra />
 
-
-
-
-
-const deletarQuantidades_Sorvetes = async (id,quantidade) =>
-{
-  try {
-    const response = await fetch(`http://localhost:3000/sorvetes/atualizarQuantidade/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-      body: JSON.stringify({ quantidade:quantidade}),
-    });
-
-    const data = await response.json();
-    setSorveteAtualizado(data.mensagem);
-  } catch (error) {
-    console.error("Erro ao atualizar o sorvete:", error);
-    setMensagem("Erro ao atualizar o sorvete!");
-  }
-
-}
-return (
-  <div>
-    <Barra />
-
-    <form className="container mt-4">
-      <p>Selecione o vendedor</p>
-      <select className="form-select mb-3" value={vendedor} onChange={handleSelectVendedorChange}>
-        <option value=""></option>
-        {vendedores.map((vendedor) => (
-          <option key={vendedor.id} value={vendedor.id}>
-            {vendedor.nome}
-          </option>
-        ))}
-      </select>
-
-      <p>Selecione um cliente</p>
-      <select className="form-select mb-3" value={cliente} onChange={handleSelectClienteChange}>
-        <option value=""></option>
-        {clientes.map((cliente) => (
-          <option key={cliente.id} value={cliente.id}>
-            {cliente.nome}
-          </option>
-        ))}
-      </select>
-
-      <h3>Selecione os Sorvetes:</h3>
-      <p>{mensagem}</p>
-      <p>{sorveteAtualizado}</p>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Selecionar</th>
-            <th>Nome do Sorvete</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sorvetes.map((sorvete) => (
-            <tr key={sorvete.id}>
-              <td>
-                <label>
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    value={sorvete.id}
-                    checked={sorveteSelecionado.includes(sorvete.id)}
-                    onChange={() => handleSorveteChange(sorvete.id)}
-                  />
-                </label>
-              </td>
-              <td>{sorvete.nome}</td>
-              <td>{sorvete.preco}</td>
-              <td>
-                {sorveteSelecionado.includes(sorvete.id) && (
-                  <input
-                    type="number"
-                    className="form-control"
-                    min="1"
-                    onChange={(e) =>
-                      handleQuantidadeChange(sorvete.id, parseInt(e.target.value, 10))
-                    }
-                  />
-                )}
-              </td>
-              <td>{calcularValorTotal(sorvete.id)}</td>
-            </tr>
+      <form className="container mt-4">
+        <p>Selecione o vendedor</p>
+        <select className="form-select mb-3" value={vendedor} onChange={handleSelectVendedorChange}>
+          <option value=""></option>
+          {vendedores.map((vendedor) => (
+            <option key={vendedor.id} value={vendedor.id}>
+              {vendedor.nome}
+            </option>
           ))}
-          <tr>
-            <td colSpan="3"></td>
-            <td>Total</td>
-            <td>{calcularValorTotalSelecionados()}</td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" className="btn btn-primary" onClick={cadastraCompra}>
-        Cadastrar Compra
-      </button>
-    </form>
-  </div>
-);
+        </select>
+
+        <p>Selecione um cliente</p>
+        <select className="form-select mb-3" value={cliente} onChange={handleSelectClienteChange}>
+          <option value=""></option>
+          {clientes.map((cliente) => (
+            <option key={cliente.id} value={cliente.id}>
+              {cliente.nome}
+            </option>
+          ))}
+        </select>
+
+        <h3>Selecione os Sorvetes:</h3>
+        <p>{mensagem}</p>
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Selecionar</th>
+              <th>Nome do Sorvete</th>
+              <th>Preço</th>
+              <th>Quantidade</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sorvetes.map((sorvete) => (
+              <tr key={sorvete.id}>
+                <td>
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      value={sorvete.id}
+                      checked={sorveteSelecionado.includes(sorvete.id)}
+                      onChange={() => handleSorveteChange(sorvete.id)}
+                    />
+                  </label>
+                </td>
+                <td>{sorvete.nome}</td>
+                <td>{sorvete.preco}</td>
+                <td>
+                  {sorveteSelecionado.includes(sorvete.id) && (
+                    <input
+                      type="number"
+                      className="form-control"
+                      min="1"
+                      onChange={(e) =>
+                        handleQuantidadeChange(sorvete.id, parseInt(e.target.value, 10))
+                      }
+                    />
+                  )}
+                </td>
+                <td>{calcularValorTotal(sorvete.id)}</td>
+              </tr>
+            ))}
+            <tr>
+              <td colSpan="3"></td>
+              <td>Total</td>
+              <td>{calcularValorTotalSelecionados()}</td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" className="btn btn-primary" onClick={cadastraCompra}>
+          Cadastrar Compra
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default Compras;

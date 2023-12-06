@@ -3,16 +3,17 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Barra = () => {
-  const [submenusVisiveis, setSubmenusVisiveis] = useState({});
+  const [submenuAberto, setSubmenuAberto] = useState(null);
 
   const toggleSubmenu = (grupo) => {
-    setSubmenusVisiveis((prevState) => ({
-      ...prevState,
-      [grupo]: !prevState[grupo] || false,
-    }));
+    setSubmenuAberto((prevState) => (prevState === grupo ? null : grupo));
   };
 
-  
+  const handleClick = (grupo) => (e) => {
+    e.preventDefault();
+    toggleSubmenu(grupo);
+  };
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -20,18 +21,18 @@ const Barra = () => {
           <li className="nav-item dropdown">
             <a
               className="nav-link dropdown-toggle"
-              href="#"
+              href="/"
               id="sorvetesDropdown"
               role="button"
               data-toggle="dropdown"
               aria-haspopup="true"
-              aria-expanded={submenusVisiveis['sorvetes']}
-              onClick={() => toggleSubmenu('sorvetes')}
+              aria-expanded={submenuAberto === 'sorvetes'}
+              onClick={handleClick('sorvetes')}
             >
               Sorvetes
             </a>
             <div
-              className={`dropdown-menu ${submenusVisiveis['sorvetes'] ? 'show' : ''}`}
+              className={`dropdown-menu ${submenuAberto === 'sorvetes' ? 'show' : ''}`}
               aria-labelledby="sorvetesDropdown"
             >
               <Link className="dropdown-item" to="/sorvetes">
@@ -51,13 +52,13 @@ const Barra = () => {
               role="button"
               data-toggle="dropdown"
               aria-haspopup="true"
-              aria-expanded={submenusVisiveis['vendedores']}
-              onClick={() => toggleSubmenu('vendedores')}
+              aria-expanded={submenuAberto === 'vendedores'}
+              onClick={handleClick('vendedores')}
             >
               Vendedores
             </a>
             <div
-              className={`dropdown-menu ${submenusVisiveis['vendedores'] ? 'show' : ''}`}
+              className={`dropdown-menu ${submenuAberto === 'vendedores' ? 'show' : ''}`}
               aria-labelledby="vendedoresDropdown"
             >
               <Link className="dropdown-item" to="/vendedores/cadastrar">
@@ -77,13 +78,13 @@ const Barra = () => {
               role="button"
               data-toggle="dropdown"
               aria-haspopup="true"
-              aria-expanded={submenusVisiveis['clientes']}
-              onClick={() => toggleSubmenu('clientes')}
+              aria-expanded={submenuAberto === 'clientes'}
+              onClick={handleClick('clientes')}
             >
               Clientes
             </a>
             <div
-              className={`dropdown-menu ${submenusVisiveis['clientes'] ? 'show' : ''}`}
+              className={`dropdown-menu ${submenuAberto === 'clientes' ? 'show' : ''}`}
               aria-labelledby="clientesDropdown"
             >
               <Link className="dropdown-item" to="/clientes/cadastrar">
@@ -103,13 +104,13 @@ const Barra = () => {
               role="button"
               data-toggle="dropdown"
               aria-haspopup="true"
-              aria-expanded={submenusVisiveis['compras']}
-              onClick={() => toggleSubmenu('compras')}
+              aria-expanded={submenuAberto === 'compras'}
+              onClick={handleClick('compras')}
             >
               Compras
             </a>
             <div
-              className={`dropdown-menu ${submenusVisiveis['compras'] ? 'show' : ''}`}
+              className={`dropdown-menu ${submenuAberto === 'compras' ? 'show' : ''}`}
               aria-labelledby="comprasDropdown"
             >
               <Link className="dropdown-item" to="/compras/cadastrar">

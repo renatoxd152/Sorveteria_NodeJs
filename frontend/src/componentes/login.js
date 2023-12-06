@@ -42,25 +42,44 @@ const Login = () => {
 
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="container mt-5">
+      <h1 className="mb-4">Login</h1>
       <form>
-        <span>{mensagem}</span>
-        <br/>
-        <label>CPF</label>
-        <input type="text" value={email} onChange={handleEmailChange} />
-        <br/>
-        <label>Senha:</label>
-        <input type="password" value={password} onChange={handlePasswordChange} />
-        <br/>
-        <button type="button" onClick={handleLogin}>
+      <div className={`alert ${mensagem ? 'alert-danger' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
+        <div className="form-group">
+          <label>CPF</label>
+          <input
+            type="text"
+            className="form-control"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>Senha:</label>
+          <input
+            type="password"
+            className="form-control"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleLogin}
+        >
           Login
         </button>
       </form>
-      <p>Não tem uma conta? <Link to="/cadastrar">Cadastre-se aqui</Link></p>
-  
+      <p className="mt-3">
+        Não tem uma conta? <Link to="/cadastrar">Cadastre-se aqui</Link>
+      </p>
     </div>
   );
+
 };
 
 export default Login;

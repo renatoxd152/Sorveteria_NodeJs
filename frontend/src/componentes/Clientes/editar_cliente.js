@@ -59,23 +59,23 @@ const EditarCliente = () =>
         <div>
             <Barra/>
             <h1>Editar Cliente</h1>
-            <form>
+            <form className="container mt-4">
                 <span>{mensagem}</span>
                 <br />
                 <label>Nome do cliente</label>
-                <input type="text" value={nome} onChange={handleNome} />
+                <input type="text" className="form-control" value={nome} onChange={handleNome} />
                 <br />
                 <label>CPF</label>
-                <input type="number" value={cpf} onChange={handleCPF} />
+                <input type="number"  className="form-control"value={cpf} onChange={handleCPF} />
                 <br />
                 <label>Email</label>
-                <input type="text" value={email} onChange={handleEmail} />
+                <input type="text"  className="form-control"value={email} onChange={handleEmail} />
                 <br />
                 <label>Telefone</label>
-                <input type="number" value={telefone} onChange={handleTelefone} />
+                <input type="number" className="form-control" value={telefone} onChange={handleTelefone} />
                 <br />
-                <button type="button" onClick={voltar}>Voltar</button>
-                <button type="button" onClick={handleEditarCliente}>
+                <button type="button" className="btn btn-secondary me-2" onClick={voltar}>Voltar</button>
+                <button type="button" className="btn btn-primary" onClick={handleEditarCliente}>
                 Cadastrar Cliente
                 </button>
             </form>
