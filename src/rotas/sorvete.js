@@ -132,7 +132,6 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
       const sorveteId = req.params.id;
       const { quantidade } = req.body;
   
-
       if (!Number.isInteger(quantidade) || quantidade <= 0) {
         return res.status(400).json({ mensagem: 'A quantidade a subtrair deve ser um número inteiro positivo' });
       }
@@ -141,7 +140,7 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
       if (!sorveteToUpdate) {
         return res.status(404).json({ mensagem: 'Sorvete não encontrado' });
       }
-
+  
       if (sorveteToUpdate.quantidade < quantidade) {
         return res.status(400).json({ mensagem: 'Quantidade insuficiente de sorvete para subtrair'});
       }
@@ -149,14 +148,18 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
       sorveteToUpdate.quantidade -= quantidade;
       await sorveteToUpdate.save();
   
+      const sorvetesAtualizados = await Sorvete.findAll();
+  
       res.status(200).json({
         mensagem: `Quantidade de sorvete ${sorveteToUpdate.nome} subtraída com sucesso`,
+        sorvetes: sorvetesAtualizados,
       });
     } catch (erro) {
       console.error(erro);
       res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
   });
+  
   
 
   

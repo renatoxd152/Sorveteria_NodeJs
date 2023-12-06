@@ -14,7 +14,6 @@ const Compras = () => {
   const [cliente, setCliente] = useState("");
   const [quantidades, setQuantidades] = useState({});
   const[mensagem,setMensagem] = useState("");
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,7 +100,7 @@ const Compras = () => {
   };
    
   const handleSorveteChange = (sorvete) => {
-    
+   
     const updatedSorvetes = sorveteSelecionado.includes(sorvete)
       ? sorveteSelecionado.filter((s) => s !== sorvete)
       : [...sorveteSelecionado, sorvete];
@@ -133,7 +132,7 @@ const Compras = () => {
       });
   
       const data = await response.json();
-      
+      return data.sorvetes;
     } catch (error) {
       console.error("Erro ao atualizar o sorvete:", error);
       setMensagem("Erro ao atualizar o sorvete!");
@@ -152,13 +151,12 @@ const Compras = () => {
 
 
   const cadastraCompra = async () => {
-    console.log(sorveteSelecionado);
     try {
 
       for (const sorveteId of sorveteSelecionado) {
         const sorvete = sorvetes.find((s) => s.id === sorveteId);
         const quantidadeSelecionada = quantidades[sorveteId];
-      
+        
         if(quantidadeSelecionada <= 0)
         {
           setMensagem("Selecione uma quantidade maior que 0");
@@ -181,7 +179,8 @@ const Compras = () => {
   
 
       for (const sorveteId of sorveteSelecionado) {
-        await deletarQuantidades_Sorvetes(sorveteId,quantidades[sorveteId]);
+        const resultado = await deletarQuantidades_Sorvetes(sorveteId,quantidades[sorveteId]);
+        setSorvetes(resultado);
       }
       
       
@@ -197,10 +196,11 @@ const Compras = () => {
         const data = await response.json();
         console.log(data.mensagem);
         setMensagem(data.mensagem);
-      
+        
+
   
     } catch (error) {
-      setMensagem("Erro ao cadastrar compra:", error);
+      setMensagem("Erro ao cadastrar compra:" + error);
     }
   };
   
