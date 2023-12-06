@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../utils/AuthContext";
 import { Link } from 'react-router-dom';
+import { useAuth } from "../../utils/AuthContext";
 const Listar = () => {
   const [vendedores, setVendedores] = useState([]);
   const [mensagem, setMensagem] = useState('');
@@ -16,17 +16,17 @@ const Listar = () => {
         },
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         const updatedVendedores = vendedores.filter((vendedor) => vendedor.id !== vendedorId);
         setVendedores(updatedVendedores);
-        setMensagem('Vendedor excluído com sucesso!');
+        setMensagem(data.mensagem);
       } else {
-        console.error('Erro ao excluir vendedor');
-        setMensagem('Erro ao excluir vendedor');
+        setMensagem(data.mensagem);
       }
     } catch (error) {
-      console.error('Erro ao excluir vendedor:', error);
-      setMensagem('Erro ao excluir vendedor');
+      setMensagem('Erro ao excluir vendedor:', error);
     }
   };
 

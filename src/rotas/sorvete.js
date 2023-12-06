@@ -1,7 +1,7 @@
 import express from 'express';
+import ItemCompra from '../model/itensCompraModel.js';
 import Sorvete from '../model/sorveteModel.js';
 import verifyToken from '../utils/jwt.js';
-
 const sorvete = express();
 sorvete.use(express.json());
 
@@ -71,12 +71,21 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
     try {
       const sorveteId = req.params.id;
   
-      const sorveteToDelete = await Sorvete.findByPk(sorveteId);
-      if (!sorveteToDelete) {
-        return res.status(404).json({ erro: 'Sorvete não encontrado' });
+      const associacoesComCompra = await ItemCompra.findAll({
+        where: { id_sorvete: sorveteId}
+      });
+
+
+      if (associacoesComCompra.length > 0) {
+        return res.status(400).json({ mensagem: 'Este sorvete está associado a uma ou mais compras. Não é possível excluí-lo.' });
       }
   
-      // Delete the sorvete
+
+      const sorveteToDelete = await Sorvete.findByPk(sorveteId);
+      if (!sorveteToDelete) {
+        return res.status(404).json({ mensagem: 'Sorvete não encontrado' });
+      }
+  
       await sorveteToDelete.destroy();
   
       return res.status(200).json({ mensagem: 'Sorvete excluído com sucesso' });

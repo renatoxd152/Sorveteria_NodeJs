@@ -1,5 +1,6 @@
 import express from 'express';
 import Cliente from '../model/clienteModel.js';
+import Compra from '../model/comprasModel.js';
 import verifyToken from '../utils/jwt.js';
 const cliente = express();
 cliente.use(express.json());
@@ -113,9 +114,17 @@ cliente.get('/cliente', verifyToken, async (req, res) => {
     try {
       const clienteId = req.params.id;
   
+      const associacoesComCompra = await Compra.findAll({
+        where: { id_cliente: clienteId}
+      });
+
+      if (associacoesComCompra.length > 0) {
+        return res.status(400).json({ mensagem: 'Este cliente está associado a uma ou mais compras. Não é possível excluí-lo.' });
+      }
+
       const clienteToDelete = await Cliente.findByPk(clienteId);
       if (!clienteToDelete) {
-        return res.status(404).json({ erro: 'Cliente não encontrado' });
+        return res.status(404).json({ mensagem: 'Cliente não encontrado' });
       }
   
       await clienteToDelete.destroy();
@@ -124,7 +133,7 @@ cliente.get('/cliente', verifyToken, async (req, res) => {
   
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ erro: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
   });
 

@@ -1,4 +1,5 @@
 import express from 'express';
+import Compra from '../model/comprasModel.js';
 import Vendedor from '../model/vendedorModel.js';
 import verifyToken from '../utils/jwt.js';
 const vendedor = express();
@@ -99,13 +100,21 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
     }
   });
   
-  vendedor.delete('/vendedor/:id',verifyToken ,async (req, res) => {
+  vendedor.delete('/vendedor/:id', verifyToken, async (req, res) => {
     try {
       const vendedorId = req.params.id;
   
+      const associacoesComCompra = await Compra.findAll({
+        where: { id_vendedor: vendedorId }
+      });
+  
+      if (associacoesComCompra.length > 0) {
+        return res.status(400).json({ mensagem: 'Este vendedor está associado a uma ou mais compras. Não é possível excluí-lo.' });
+      }
+  
       const vendedorToDelete = await Vendedor.findByPk(vendedorId);
       if (!vendedorToDelete) {
-        return res.status(404).json({ erro: 'Vendedor não encontrado' });
+        return res.status(404).json({ mensagem: 'Vendedor não encontrado' });
       }
   
       await vendedorToDelete.destroy();
@@ -114,9 +123,10 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
   
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ erro: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor' });
     }
   });
+  
 
 
   export default vendedor;

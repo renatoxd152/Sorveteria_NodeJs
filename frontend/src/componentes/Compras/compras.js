@@ -1,6 +1,6 @@
-import React, { useState,useEffect } from "react";
-import Barra from "../../utils/Sorvete/barra_navegacao";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
+import Barra from "../../utils/Sorvete/barra_navegacao";
 
 
 const Compras = () => {
@@ -185,7 +185,7 @@ const calcularValorTotalSelecionados = () => {
       <Barra />
       
       
-      <form>
+      <form> 
       
           <select value={vendedor} onChange={handleSelectVendedorChange}>
         <option value="">Selecione um vendedor</option>
@@ -209,7 +209,7 @@ const calcularValorTotalSelecionados = () => {
     </select>
         
     <h3>Selecione os Sorvetes:</h3>
-    
+    <p>{mensagem}</p>
       <table>
         <thead>
           <tr>
@@ -261,7 +261,7 @@ const calcularValorTotalSelecionados = () => {
         </tr>
         </tbody>
       </table>
-      <button onClick={cadastraCompra}>Cadastrar Compra</button>
+      <button type="button" onClick={cadastraCompra}>Cadastrar Compra</button>
       </form>
     </div>
   );

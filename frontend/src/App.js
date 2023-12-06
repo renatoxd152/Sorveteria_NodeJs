@@ -1,18 +1,18 @@
 import { Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './utils/AuthContext';
-import Cadastrar from './componentes/cadastrar';
-import Login from './componentes/login';
-import Sorvetes from './componentes/Sorvete/sorvetes';
-import ListarSorvetes from './componentes/Sorvete/listar_sorvetes';
-import Vendedores from './componentes/Vendedores/vendedores';
-import ListarVendedores from './componentes/Vendedores/listar_vendedores';
 import Clientes from './componentes/Clientes/clientes';
+import EditarCliente from './componentes/Clientes/editar_cliente';
+import ListarClientes from './componentes/Clientes/listar';
 import Compras from './componentes/Compras/compras';
 import ListarCompras from './componentes/Compras/listar_compras';
-import ListarClientes from './componentes/Clientes/listar';
 import EditarSorvete from './componentes/Sorvete/editar_sorvete';
-import EditarCliente from './componentes/Clientes/editar_cliente';
+import ListarSorvetes from './componentes/Sorvete/listar_sorvetes';
+import Sorvetes from './componentes/Sorvete/sorvetes';
 import EditarVendedor from './componentes/Vendedores/editar_vendedor';
+import ListarVendedores from './componentes/Vendedores/listar_vendedores';
+import Vendedores from './componentes/Vendedores/vendedores';
+import Cadastrar from './componentes/cadastrar';
+import Login from './componentes/login';
+import { AuthProvider } from './utils/AuthContext';
 function App() {
   return (
     <AuthProvider>

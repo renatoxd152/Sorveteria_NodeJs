@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../utils/AuthContext";
 import { Link } from 'react-router-dom';
+import { useAuth } from "../../utils/AuthContext";
 const Listar = () => {
   const [sorvetes, setSorvetes] = useState([]);
   const [mensagem, setMensagem] = useState('');
@@ -17,14 +17,16 @@ const Listar = () => {
         },
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         
         const updatedSorvetes = sorvetes.filter((sorvete) => sorvete.id !== sorveteId);
         setSorvetes(updatedSorvetes);
-        setMensagem('Sorvete excluído com sucesso!');
+        setMensagem(data.mensagem);
+
       } else {
-        console.error('Erro ao excluir sorvete');
-        setMensagem('Erro ao excluir sorvete');
+        setMensagem(data.mensagem);
       }
     } catch (error) {
       console.error('Erro ao excluir sorvete:', error);

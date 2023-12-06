@@ -16,13 +16,13 @@ const Listar = () => {
         },
       });
 
+      const data = await response.json();
       if (response.ok) {
         const updatedClientes = clientes.filter((cliente) => cliente.id !== clienteId);
         setClientes(updatedClientes);
-        setMensagem("Cliente excluído com sucesso!");
+        setMensagem(data.mensagem);
       } else {
-        console.error("Erro ao excluir cliente");
-        setMensagem("Erro ao excluir cliente");
+        setMensagem(data.mensagem);
       }
     } catch (error) {
       console.error("Erro ao excluir cliente:", error);
