@@ -64,13 +64,14 @@ const Listar = () => {
     <div>
       <h1>Lista de Sorvetes</h1>
       <span>{mensagem}</span>
-      <table>
-        <thead>
+      <table className="table">
+        <thead className="thead-dark">
           <tr>
             <th>Nome</th>
             <th>Quantidade</th>
             <th>Preço</th>
             <th>Excluir Sorvete</th>
+            <th>Atualizar Sorvete</th>
           </tr>
         </thead>
         <tbody>
@@ -80,14 +81,15 @@ const Listar = () => {
               <td>{sorvete.quantidade}</td>
               <td>{sorvete.preco}</td>
               <td>
-              <button onClick={() => handleExcluirSorvete(sorvete.id)}>
-                Excluir
-              </button>
-            </td>
-
-            <td>
-            <Link to={`/editarSorvete/${sorvete.id}`}>Atualizar</Link>
-            </td>
+                <button className="btn btn-danger" onClick={() => handleExcluirSorvete(sorvete.id)}>
+                  Excluir
+                </button>
+              </td>
+              <td>
+                <Link to={`/editarSorvete/${sorvete.id}`} className="btn btn-primary">
+                  Atualizar
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

@@ -57,8 +57,8 @@ const Listar = () => {
     <div>
       <h1>Lista de Clientes</h1>
       <span>{mensagem}</span>
-      <table>
-        <thead>
+      <table className="table">
+        <thead className="thead-dark">
           <tr>
             <th>Nome</th>
             <th>CPF</th>
@@ -76,12 +76,17 @@ const Listar = () => {
               <td>{cliente.email}</td>
               <td>{cliente.telefone}</td>
               <td>
-                <button onClick={() => handleExcluirCliente(cliente.id)}>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleExcluirCliente(cliente.id)}
+                >
                   Excluir
                 </button>
               </td>
               <td>
-              <Link to={`/editarCliente/${cliente.id}`}>Atualizar</Link>
+                <Link to={`/editarCliente/${cliente.id}`} className="btn btn-primary">
+                  Atualizar
+                </Link>
               </td>
             </tr>
           ))}

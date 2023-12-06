@@ -56,32 +56,33 @@ const Vendedores=()=>
       };
 
 
-    return(
+      return (
         <div>
-          <Barra/>
-          
-          
-
-            <form>
-                <span>{mensagem}</span>
-                <br/>
-                <label>Nome do funcionário</label>
-                <input type="text" value={nome} onChange={handleNome}/>
-                <br/>
-                <label>CPF</label>
-                <input type="number" value={cpf} onChange={handleCPF}/>
-                <br/>
-                <label>Email</label>
-                <input type="text" value={email} onChange={handleEmail}/>
-                <br/>
-                <label>Telefone</label>
-                <input type="number" value={telefone} onChange={handleTelefone}/>
-                <br/>
-                <button type="button" onClick={handleCadastrarVendedor}>Cadastrar Vendedor</button>
-
-            </form>
+          <Barra />
+    
+          <form className="container mt-4">
+          <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
         </div>
-    )
-}
+            <br />
+            <label>Nome do funcionário</label>
+            <input type="text" className="form-control" value={nome} onChange={handleNome} />
+            <br />
+            <label>CPF</label>
+            <input type="number" className="form-control" value={cpf} onChange={handleCPF} />
+            <br />
+            <label>Email</label>
+            <input type="text" className="form-control" value={email} onChange={handleEmail} />
+            <br />
+            <label>Telefone</label>
+            <input type="number" className="form-control" value={telefone} onChange={handleTelefone} />
+            <br />
+            <button type="button" className="btn btn-primary" onClick={handleCadastrarVendedor}>
+              Cadastrar Vendedor
+            </button>
+          </form>
+        </div>
+      );
+    };
 
 export default Vendedores;

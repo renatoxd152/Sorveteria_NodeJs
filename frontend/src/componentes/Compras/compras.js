@@ -226,16 +226,14 @@ const deletarQuantidades_Sorvetes = async (id,quantidade) =>
   }
 
 }
-  return (
-    
-    <div>
-      <Barra />
-      
-      
-      <form> 
-      
-          <select value={vendedor} onChange={handleSelectVendedorChange}>
-        <option value="">Selecione um vendedor</option>
+return (
+  <div>
+    <Barra />
+
+    <form className="container mt-4">
+      <p>Selecione o vendedor</p>
+      <select className="form-select mb-3" value={vendedor} onChange={handleSelectVendedorChange}>
+        <option value=""></option>
         {vendedores.map((vendedor) => (
           <option key={vendedor.id} value={vendedor.id}>
             {vendedor.nome}
@@ -243,22 +241,20 @@ const deletarQuantidades_Sorvetes = async (id,quantidade) =>
         ))}
       </select>
 
+      <p>Selecione um cliente</p>
+      <select className="form-select mb-3" value={cliente} onChange={handleSelectClienteChange}>
+        <option value=""></option>
+        {clientes.map((cliente) => (
+          <option key={cliente.id} value={cliente.id}>
+            {cliente.nome}
+          </option>
+        ))}
+      </select>
 
-          <br />
-
-          <select value={cliente} onChange={handleSelectClienteChange}>
-      <option value="">Selecione um cliente</option>
-      {clientes.map((cliente) => (
-        <option key={cliente.id} value={cliente.id}>
-          {cliente.nome}
-        </option>
-      ))}
-    </select>
-        
-    <h3>Selecione os Sorvetes:</h3>
-    <p>{mensagem}</p>
-    <p>{sorveteAtualizado}</p>
-      <table>
+      <h3>Selecione os Sorvetes:</h3>
+      <p>{mensagem}</p>
+      <p>{sorveteAtualizado}</p>
+      <table className="table">
         <thead>
           <tr>
             <th>Selecionar</th>
@@ -275,6 +271,7 @@ const deletarQuantidades_Sorvetes = async (id,quantidade) =>
                 <label>
                   <input
                     type="checkbox"
+                    className="form-check-input"
                     value={sorvete.id}
                     checked={sorveteSelecionado.includes(sorvete.id)}
                     onChange={() => handleSorveteChange(sorvete.id)}
@@ -287,32 +284,30 @@ const deletarQuantidades_Sorvetes = async (id,quantidade) =>
                 {sorveteSelecionado.includes(sorvete.id) && (
                   <input
                     type="number"
+                    className="form-control"
                     min="1"
                     onChange={(e) =>
                       handleQuantidadeChange(sorvete.id, parseInt(e.target.value, 10))
                     }
-                    
                   />
                 )}
               </td>
               <td>{calcularValorTotal(sorvete.id)}</td>
-              
             </tr>
-
-            
-  
           ))}
           <tr>
             <td colSpan="3"></td>
             <td>Total</td>
             <td>{calcularValorTotalSelecionados()}</td>
-        </tr>
+          </tr>
         </tbody>
       </table>
-      <button type="button" onClick={cadastraCompra}>Cadastrar Compra</button>
-      </form>
-    </div>
-  );
+      <button type="button" className="btn btn-primary" onClick={cadastraCompra}>
+        Cadastrar Compra
+      </button>
+    </form>
+  </div>
+);
 };
 
 export default Compras;

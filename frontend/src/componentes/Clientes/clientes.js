@@ -50,23 +50,25 @@ const Clientes = () => {
     <div>
       <Barra />
 
-      <form>
-        <span>{mensagem}</span>
+      <form className="container mt-4">
+      <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
         <br />
         <label>Nome do cliente</label>
-        <input type="text" value={nome} onChange={handleNome} />
+        <input type="text" className="form-control" value={nome} onChange={handleNome} />
         <br />
         <label>CPF</label>
-        <input type="number" value={cpf} onChange={handleCPF} />
+        <input type="number" className="form-control" value={cpf} onChange={handleCPF} />
         <br />
         <label>Email</label>
-        <input type="text" value={email} onChange={handleEmail} />
+        <input type="text" className="form-control" value={email} onChange={handleEmail} />
         <br />
         <label>Telefone</label>
-        <input type="number" value={telefone} onChange={handleTelefone} />
+        <input type="number" className="form-control" value={telefone} onChange={handleTelefone} />
         <br />
         
-        <button type="button" onClick={handleCadastrarCliente}>
+        <button type="button" className="btn btn-primary" onClick={handleCadastrarCliente}>
           Cadastrar Cliente
         </button>
       </form>

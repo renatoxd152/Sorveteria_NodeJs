@@ -48,28 +48,30 @@ const Sorvetes=()=>
       };
 
 
-    return(
+      return (
         <div>
-          <Barra/>
-          
-          
-
-            <form>
-                <span>{mensagem}</span>
-                <br/>
-                <label>Nome do sorvete do sorvete</label>
-                <input type="text" value={nome} onChange={handleNome}/>
-                <br/>
-                <label>Quantidade</label>
-                <input type="number" value={quantidade} onChange={handleQuantidade}/>
-                <br/>
-                <label>Preço</label>
-                <input type="number" value={preco} onChange={handlePreco}/>
-                <br/>
-                <button type="button" onClick={handleCadastrarSorvete}>Cadastrar Sorvete</button>
-            </form>
+          <Barra />
+    
+          <form className="container mt-4">
+          <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
         </div>
-    )
-}
+            <br />
+            <label>Nome do sorvete</label>
+            <input type="text" className="form-control" value={nome} onChange={handleNome} />
+            <br />
+            <label>Quantidade</label>
+            <input type="number" className="form-control" value={quantidade} onChange={handleQuantidade} />
+            <br />
+            <label>Preço</label>
+            <input type="number" className="form-control" value={preco} onChange={handlePreco} />
+            <br />
+            <button type="button" className="btn btn-primary" onClick={handleCadastrarSorvete}>
+              Cadastrar Sorvete
+            </button>
+          </form>
+        </div>
+      );
+    };
 
 export default Sorvetes;

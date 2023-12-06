@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../utils/AuthContext";
-
+import Modal from 'react-modal';
 const Listar = () => {
     const { token } = useAuth();
     const [compras, setCompras] = useState([]);
     const [detalhesCompra, setDetalhesCompra] = useState(null);
     const[itens,setItens] = useState([]);
     const[mensagem,setMensagem] = useState("");
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
+    const openModal = () => {
+      setModalIsOpen(true);
+    };
+  
+    const closeModal = () => {
+      setModalIsOpen(false);
+      setDetalhesCompra(null);
+    };
     async function fetchDetalhesCompra(idCompra) {
         try {
           const response = await fetch(`http://localhost:3000/compra/${idCompra}`, {
@@ -40,6 +49,7 @@ const Listar = () => {
       }
     
       const handleRowClick = async (idCompra) => {
+        openModal();
         const detalhes = await fetchDetalhesCompra(idCompra);
         setDetalhesCompra(detalhes);
       };
@@ -177,47 +187,69 @@ const Listar = () => {
 
   
     return (
-        <div>
-          <p>{mensagem}</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Vendedor</th>
-            <th>Cliente</th>
-            <th>Valor da Compra</th>
-            <th>Data da Compra</th>
-          </tr>
-        </thead>
-        <tbody>
-          {compras.map((compra) => (
-             <tr key={compra.id} onClick={() => handleRowClick(compra.id)}>
-              <td>{compra.nome_vendedor}</td>
-              <td>{compra.nome_cliente}</td>
-              <td>{compra.valor_compra}</td>
-              <td>{compra.data_compra}</td>
-              <td><button type="button" onClick={()=>excluirCompra(compra.id)}>Excluir</button></td>
+      <div>
+        <p>{mensagem}</p>
+        <table className="table">
+          <thead className="thead-dark">
+            <tr>
+              <th>Vendedor</th>
+              <th>Cliente</th>
+              <th>Valor da Compra</th>
+              <th>Data da Compra</th>
+              <th>Excluir Compra</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      
-  <div>
-    <h2>Detalhes da Compra</h2>
-    <p><strong>Itens da Compra:</strong></p>
-    <ul>
-      {itens.map(item => (
-        <li key={item.id}>{item.nome_sorvete} - Quantidade: {item.quantidade}</li>
+          </thead>
+          <tbody>
+            {compras.map((compra) => (
+              <tr key={compra.id} onClick={() => handleRowClick(compra.id)} style={{cursor:'pointer'}}>
+                <td>{compra.nome_vendedor}</td>
+                <td>{compra.nome_cliente}</td>
+                <td>{compra.valor_compra}</td>
+                <td>{compra.data_compra}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => excluirCompra(compra.id)}
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+  
+        <Modal
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="Detalhes da Compra"
+  className="modal-content" 
+>
+  <div className="modal-header">
+    <h2 className="modal-title">Detalhes da Compra</h2>
+    <button type="button" className="btn btn-secondary" onClick={closeModal}>
+      Fechar
+    </button>
+  </div>
+  <div className="modal-body">
+    <p>
+      <strong>Itens da Compra:</strong>
+    </p>
+    <ul className="list-group">
+      {itens.map((item) => (
+        <li key={item.id} className="list-group-item">
+          {item.nome_sorvete} - Quantidade: {item.quantidade}
+        </li>
       ))}
     </ul>
   </div>
-
-
-
-
+  <div className="modal-footer">
+    
+  </div>
+</Modal>
 
       </div>
-      
     );
   };
   
