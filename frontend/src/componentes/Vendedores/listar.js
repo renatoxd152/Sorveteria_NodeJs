@@ -5,7 +5,7 @@ const Listar = () => {
   const [vendedores, setVendedores] = useState([]);
   const [mensagem, setMensagem] = useState('');
   const { token } = useAuth();
-
+  const[erro,setErro] = useState("");
   const handleExcluirVendedor = async (vendedorId) => {
     try {
       const response = await fetch(`http://localhost:3000/vendedor/${vendedorId}`, {
@@ -17,16 +17,28 @@ const Listar = () => {
       });
 
       const data = await response.json();
-
+      console.log(data.flag);
       if (response.ok) {
         const updatedVendedores = vendedores.filter((vendedor) => vendedor.id !== vendedorId);
         setVendedores(updatedVendedores);
-        setMensagem(data.mensagem);
+       
+        if(data.flag == false)
+        {
+          setErro(data.mensagem);
+          setMensagem("");
+        }
+        else
+        {
+          setMensagem(data.mensagem);
+          
+          setErro("");
+        }
       } else {
-        setMensagem(data.mensagem);
+        setErro(data.mensagem);
+        setMensagem("");
       }
     } catch (error) {
-      setMensagem('Erro ao excluir vendedor:', error);
+      setErro('Erro ao excluir vendedor:', error);
     }
   };
 
@@ -56,7 +68,12 @@ const Listar = () => {
   return (
     <div>
       <h1>Lista de Vendedores</h1>
-      <span>{mensagem}</span>
+      <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
+        </div>
       <table className="table">
         <thead className="thead-dark">
           <tr>

@@ -5,7 +5,7 @@ const Listar = () => {
   const [sorvetes, setSorvetes] = useState([]);
   const [mensagem, setMensagem] = useState('');
   const { token } = useAuth();
-
+  const[erro,setErro] = useState("");
 
   const handleExcluirSorvete = async (sorveteId) => {
     try {
@@ -24,9 +24,20 @@ const Listar = () => {
         const updatedSorvetes = sorvetes.filter((sorvete) => sorvete.id !== sorveteId);
         setSorvetes(updatedSorvetes);
         setMensagem(data.mensagem);
+        if(data.flag == false)
+        {
+          setErro(data.mensagem);
+          setMensagem("");
+        }
+        else
+        {
+          setMensagem(data.mensagem);
+          setErro("");
+        }
 
       } else {
-        setMensagem(data.mensagem);
+        setErro(data.mensagem);
+        setMensagem("");
       }
     } catch (error) {
       console.error('Erro ao excluir sorvete:', error);
@@ -63,7 +74,12 @@ const Listar = () => {
   return (
     <div>
       <h1>Lista de Sorvetes</h1>
-      <span>{mensagem}</span>
+      <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
+        </div>
       <table className="table">
         <thead className="thead-dark">
           <tr>

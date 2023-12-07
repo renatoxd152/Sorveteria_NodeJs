@@ -5,7 +5,7 @@ const Listar = () => {
   const [clientes, setClientes] = useState([]);
   const [mensagem, setMensagem] = useState("");
   const { token } = useAuth();
-
+  const[erro,setErro] = useState("");
   const handleExcluirCliente = async (clienteId) => {
     try {
       const response = await fetch(`http://localhost:3000/cliente/${clienteId}`, {
@@ -20,9 +20,18 @@ const Listar = () => {
       if (response.ok) {
         const updatedClientes = clientes.filter((cliente) => cliente.id !== clienteId);
         setClientes(updatedClientes);
-        setMensagem(data.mensagem);
+        if(data.flag == false)
+        {
+          setErro(data.mensagem);
+          setMensagem("");
+        }
+        else
+        {
+          setMensagem(data.mensagem);
+          setErro("");
+        }
       } else {
-        setMensagem(data.mensagem);
+        setErro(data.mensagem);
       }
     } catch (error) {
       console.error("Erro ao excluir cliente:", error);
@@ -56,7 +65,12 @@ const Listar = () => {
   return (
     <div>
       <h1>Lista de Clientes</h1>
-      <span>{mensagem}</span>
+      <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
+        </div>
       <table className="table">
         <thead className="thead-dark">
           <tr>

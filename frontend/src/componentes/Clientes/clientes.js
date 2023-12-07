@@ -10,7 +10,7 @@ const Clientes = () => {
 
   const { token } = useAuth();
   const [mensagem, setMensagem] = useState("");
-
+  const [erro, setErro] = useState("");
   const handleNome = (e) => {
     setNome(e.target.value);
   };
@@ -28,6 +28,10 @@ const Clientes = () => {
   };
 
   const handleCadastrarCliente = async () => {
+    if (!nome || !cpf || !email || !telefone) {
+      setErro("Por favor, preencha todos os campos.");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:3000/cliente", {
         method: "POST",
@@ -41,6 +45,7 @@ const Clientes = () => {
       const data = await response.json();
 
       setMensagem(data.mensagem);
+      setErro("");
     } catch (error) {
       console.error("Erro ao cadastrar o Cliente!");
     }
@@ -53,6 +58,9 @@ const Clientes = () => {
       <form className="container mt-4">
       <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
           {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
         </div>
         <br />
         <label>Nome do cliente</label>

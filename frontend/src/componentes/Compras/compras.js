@@ -14,7 +14,7 @@ const Compras = () => {
   const [cliente, setCliente] = useState("");
   const [quantidades, setQuantidades] = useState({});
   const[mensagem,setMensagem] = useState("");
-
+  const[erro,setErro] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,7 +30,7 @@ const Compras = () => {
 
         setClientes(data);
       } catch (error) {
-        setMensagem("Erro ao buscar os clientes:", error);
+        setErro("Erro ao buscar os clientes:", error);
       }
     };
 
@@ -53,7 +53,7 @@ const Compras = () => {
        
         setVendedores(data);
       } catch (error) {
-        setMensagem("Erro ao buscar os vendedores:", error)
+        setErro("Erro ao buscar os vendedores:", error)
         
       }
     };
@@ -76,7 +76,7 @@ const Compras = () => {
         const data = await response.json();
         setSorvetes(data);
       } catch (error) {
-        setMensagem("Erro ao buscar sorvetes:", error)
+        setErro("Erro ao buscar sorvetes:", error)
       
       }
     };
@@ -135,7 +135,7 @@ const Compras = () => {
       return data.sorvetes;
     } catch (error) {
       console.error("Erro ao atualizar o sorvete:", error);
-      setMensagem("Erro ao atualizar o sorvete!");
+      setErro("Erro ao atualizar o sorvete!");
     }
   
   }
@@ -152,18 +152,24 @@ const Compras = () => {
 
   const cadastraCompra = async () => {
     try {
-
+      
+      if(sorveteSelecionado.length === 0)
+      {
+        setErro("Selecione pelo menos um sorvete");
+        return;
+      }
+    
       for (const sorveteId of sorveteSelecionado) {
         const sorvete = sorvetes.find((s) => s.id === sorveteId);
         const quantidadeSelecionada = quantidades[sorveteId];
         
         if(quantidadeSelecionada <= 0)
         {
-          setMensagem("Selecione uma quantidade maior que 0");
+          setErro("Selecione uma quantidade maior que 0");
           return;
         }
         if (sorvete && quantidadeSelecionada > sorvete.quantidade) {
-          setMensagem(`Quantidade insuficiente de ${sorvete.nome} no estoque`);
+          setErro(`Quantidade insuficiente de ${sorvete.nome} no estoque`);
           return;
         }
       }
@@ -194,13 +200,19 @@ const Compras = () => {
       });
 
         const data = await response.json();
-        console.log(data.mensagem);
-        setMensagem(data.mensagem);
-        
-
+        if(data.flag == false)
+        {
+          setErro(data.mensagem);
+          setMensagem("");
+        }
+        else
+        {
+          setMensagem(data.mensagem);
+          setErro("");
+        }
   
     } catch (error) {
-      setMensagem("Erro ao cadastrar compra:" + error);
+      setErro("Erro ao cadastrar compra:" + error);
     }
   };
   
@@ -240,6 +252,12 @@ const calcularValorTotalSelecionados = () => {
       <Barra />
 
       <form className="container mt-4">
+      <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
+          {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
+        </div>
         <p>Selecione o vendedor</p>
         <select className="form-select mb-3" value={vendedor} onChange={handleSelectVendedorChange}>
           <option value=""></option>
@@ -261,8 +279,7 @@ const calcularValorTotalSelecionados = () => {
         </select>
 
         <h3>Selecione os Sorvetes:</h3>
-        <p>{mensagem}</p>
-
+        
         <table className="table">
           <thead>
             <tr>

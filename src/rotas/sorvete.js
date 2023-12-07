@@ -77,21 +77,21 @@ sorvete.post('/sorvetes',verifyToken,async (req, res) => {
 
 
       if (associacoesComCompra.length > 0) {
-        return res.status(400).json({ mensagem: 'Este sorvete está associado a uma ou mais compras. Não é possível excluí-lo.' });
+        return res.status(400).json({ mensagem: 'Este sorvete está associado a uma ou mais compras. Não é possível excluí-lo.',flag:false });
       }
   
 
       const sorveteToDelete = await Sorvete.findByPk(sorveteId);
       if (!sorveteToDelete) {
-        return res.status(404).json({ mensagem: 'Sorvete não encontrado' });
+        return res.status(404).json({ mensagem: 'Sorvete não encontrado',flag:false });
       }
   
       await sorveteToDelete.destroy();
   
-      return res.status(200).json({ mensagem: 'Sorvete excluído com sucesso' });
+      return res.status(200).json({ mensagem: 'Sorvete excluído com sucesso',flag:true });
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ erro: 'Erro interno do servidor' });
+      res.status(500).json({ erro: 'Erro interno do servidor',flag:false });
     }
   });
   

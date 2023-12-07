@@ -36,12 +36,12 @@ compra.get('/compras',verifyToken, async (req, res) => {
       
       const vendedorExistente = await Vendedor.findByPk(id_vendedor);
       if (!vendedorExistente) {
-        return res.status(404).json({ mensagem: 'Vendedor não encontrado' });
+        return res.status(404).json({ mensagem: 'Vendedor não encontrado',flag:false });
       }
 
       const clienteExistente = await Cliente.findByPk(id_cliente);
       if (!clienteExistente) {
-        return res.status(404).json({ mensagem: 'Cliente não encontrado' });
+        return res.status(404).json({ mensagem: 'Cliente não encontrado',flag:false });
       }
 
       
@@ -70,11 +70,12 @@ compra.get('/compras',verifyToken, async (req, res) => {
       );
   
       if (erroEncontrado) {
-        return res.status(404).json({ mensagem: 'Um ou mais sorvetes não foram encontrados' });
+        return res.status(404).json({ mensagem: 'Um ou mais sorvetes não foram encontrados',flag:false });
       }
 
       res.status(201).json({
         mensagem:"Compra cadastrada com sucesso!",
+        flag:true,
         id: novaCompra.id,
         data_compra: dataFormatada,
         id_vendedor: novaCompra.id_vendedor,
@@ -83,7 +84,7 @@ compra.get('/compras',verifyToken, async (req, res) => {
       });
   
     } catch (erro) {
-      res.status(500).json({ mensagem: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor',flag:false });
     }
   });
   

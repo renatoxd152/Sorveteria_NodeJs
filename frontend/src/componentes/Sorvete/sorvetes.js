@@ -10,6 +10,7 @@ const Sorvetes=()=>
 
     const { token } = useAuth();
     const[mensagem,setMensagem] = useState("");
+    const [erro, setErro] = useState("");
     const handleNome = (e) =>
     {
         setNome(e.target.value);
@@ -26,7 +27,24 @@ const Sorvetes=()=>
 
 
     const handleCadastrarSorvete = async () => {
-       
+      if (!nome || !quantidade || !preco) {
+        setErro("Por favor, preencha todos os campos.");
+        return;
+      }
+      if (isNaN(Number(quantidade)) || isNaN(Number(preco))) {
+        setErro("Quantidade e preço devem ser números válidos.");
+        return;
+      }
+    
+      if (quantidade < 0) {
+        setErro("A quantidade não pode ser negativa.");
+        return;
+      }
+    
+      if (preco < 0) {
+        setErro("O preço não pode ser negativo.");
+        return;
+      }
         try {
            
           const response = await fetch('http://localhost:3000/sorvetes', {
@@ -41,7 +59,7 @@ const Sorvetes=()=>
           const data = await response.json();
           
           setMensagem(data.mensagem);
-          
+          setErro("");
         } catch (error) {
           console.error('Erro ao cadastrar o sorvete!');
         }
@@ -55,6 +73,9 @@ const Sorvetes=()=>
           <form className="container mt-4">
           <div className={`alert ${mensagem ? 'alert-success' : 'd-none'}`} role="alert">
           {mensagem}
+        </div>
+        <div className={`alert ${erro ? 'alert-danger' : 'd-none'}`} role="alert">
+          {erro}
         </div>
             <br />
             <label>Nome do sorvete</label>

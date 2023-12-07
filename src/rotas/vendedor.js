@@ -109,21 +109,21 @@ vendedor.get('/vendedor', verifyToken,async (req, res) => {
       });
   
       if (associacoesComCompra.length > 0) {
-        return res.status(400).json({ mensagem: 'Este vendedor está associado a uma ou mais compras. Não é possível excluí-lo.' });
+        return res.status(400).json({ mensagem: 'Este vendedor está associado a uma ou mais compras. Não é possível excluí-lo.',flag:false });
       }
   
       const vendedorToDelete = await Vendedor.findByPk(vendedorId);
       if (!vendedorToDelete) {
-        return res.status(404).json({ mensagem: 'Vendedor não encontrado' });
+        return res.status(404).json({ mensagem: 'Vendedor não encontrado',flag:false });
       }
   
       await vendedorToDelete.destroy();
   
-      return res.status(200).json({ mensagem: 'Vendedor excluído com sucesso' });
+      return res.status(200).json({ mensagem: 'Vendedor excluído com sucesso',flag:true });
   
     } catch (erro) {
       console.error(erro);
-      res.status(500).json({ mensagem: 'Erro interno do servidor' });
+      res.status(500).json({ mensagem: 'Erro interno do servidor',flag:false });
     }
   });
   
