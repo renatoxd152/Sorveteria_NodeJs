@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useAuth } from "../AuthContext";
 
 const Barra = () => {
+  
   const [submenuAberto, setSubmenuAberto] = useState(null);
-
+  const{logout} = useAuth();
+  const navigate = useNavigate();
   const toggleSubmenu = (grupo) => {
     setSubmenuAberto((prevState) => (prevState === grupo ? null : grupo));
   };
@@ -13,6 +16,12 @@ const Barra = () => {
     e.preventDefault();
     toggleSubmenu(grupo);
   };
+
+  const sair = () =>
+  {
+    logout();
+    return navigate("/login");
+  }
 
   return (
     <div>
@@ -122,7 +131,9 @@ const Barra = () => {
             </div>
           </li>
         </ul>
+        <button onClick={sair} className="btn btn-danger">Sair</button>
       </nav>
+      
     </div>
   );
 };
